@@ -1,8 +1,9 @@
+import styles from './Animals.module.css';
 import config from '../../api/config';
 import { Animal } from '../../models/Animal';
 import { TypeAnimal } from '../../models/TypeAnimal';
 import { AnimalStatus } from '../../models/AnimalStatus';
-import { AnimalRequest } from '../../api/animal';
+import { AnimalRequest } from '../../api/animals';
 import Modal from 'antd/es/modal/Modal';
 import Input from 'antd/es/input/Input';
 import { useEffect, useState, ChangeEvent } from 'react';
@@ -39,9 +40,7 @@ export const CreateUpdateAnimal = ({
 	animalStatuses,
 }: Props) => {
 	const [name, setName] = useState<string>('');
-	const [gender, setGender] = useState<'Мальчик' | 'Девочка' | undefined>(
-		undefined
-	);
+	const [gender, setGender] = useState<'Мальчик' | 'Девочка' | null>(null);
 	const [age, setAge] = useState<number>(0);
 	const [description, setDescription] = useState<string>('');
 	const [photoPath, setPhotoPath] = useState<string>('');
@@ -51,7 +50,7 @@ export const CreateUpdateAnimal = ({
 
 	useEffect(() => {
 		setName(values.name);
-		setGender(values.gender as 'Мальчик' | 'Девочка');
+		setGender(values.gender);
 		setAge(values.age);
 		setDescription(values.description);
 		setPhotoPath(values.photo || '');
@@ -156,17 +155,18 @@ export const CreateUpdateAnimal = ({
 			onCancel={handleCancel}
 			cancelText={'Отмена'}
 		>
-			<div className='animal__modal'>
+			<div className={styles.animal__modal}>
 				<Input
+					className={styles.modal__input}
 					value={name}
 					onChange={(e: ChangeEvent<HTMLInputElement>) =>
 						setName(e.target.value)
 					}
 					placeholder='Имя'
 				/>
-				<Select<'Мальчик' | 'Девочка'> 
+				<Select
 					value={gender}
-					onChange={value => setGender(value)}
+					onChange={(value: 'Мальчик' | 'Девочка') => setGender(value)}
 					placeholder='Пол'
 					options={[
 						{ value: 'Мальчик', label: 'Мальчик' },
@@ -194,45 +194,32 @@ export const CreateUpdateAnimal = ({
 					autoSize={{ minRows: 3, maxRows: 3 }}
 					placeholder='Описание'
 				/>
-				<div style={{ margin: '16px 0' }}>
-					{photoPath ? (
-						<div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-							<div style={{ width: '100%', height: 200 }}>
-								<Image
-									src={
-										photoPath.startsWith('http')
-											? photoPath
-											: `${config.api.baseUrl}${photoPath}`
-									}
-									alt='Preview'
-									style={{
-										width: '100%',
-										height: '100%',
-										objectFit: 'cover',
-										borderRadius: 8,
-									}}
-								/>
-							</div>
-							<div style={{ display: 'flex', gap: 8 }}>
-								<Upload {...uploadProps}>
-									<Button icon={<UploadOutlined />}>Заменить фото</Button>
-								</Upload>
-								<Button
-									danger
-									onClick={handleRemovePhoto}
-									icon={<DeleteOutlined />}
-								>
-									Удалить фото
-								</Button>
-							</div>
+				<div className={styles.modal__upload__container}>
+					{photoPath && (
+						<div className={styles.modal__img__container}>
+							<Image
+								src={
+									photoPath.startsWith('http')
+										? photoPath
+										: `${config.api.baseUrl}${photoPath}`
+								}
+								className={styles.modal__img}
+								preview={false}
+							/>
 						</div>
-					) : (
+					)}
+					<div className={styles.modal__buttons}>
 						<Upload {...uploadProps}>
-							<Button icon={<UploadOutlined />} loading={uploading}>
-								Загрузить фото
+							<Button icon={<UploadOutlined />}>
+								{photoPath ? 'Заменить фото' : 'Загрузить фото'}
 							</Button>
 						</Upload>
-					)}
+						{photoPath && (
+							<Button danger onClick={handleRemovePhoto}>
+								Удалить фото
+							</Button>
+						)}
+					</div>
 				</div>
 				<Select
 					value={typeAnimalId}
@@ -243,7 +230,6 @@ export const CreateUpdateAnimal = ({
 						value: type.id,
 					}))}
 				/>
-
 				<Select
 					value={animalStatusId}
 					onChange={(value: string) => setAnimalStatusId(value)}

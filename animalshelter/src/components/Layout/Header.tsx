@@ -1,6 +1,7 @@
 import React from 'react';
 import { Layout, Menu } from 'antd';
 import { Link } from 'react-router-dom';
+import styles from './Layout.module.css';
 
 const { Header } = Layout;
 
@@ -11,12 +12,12 @@ const items = [
 
 const AppHeader: React.FC = () => {
 	return (
-		<Header>
+		<Header className={styles.header}>
 			<Menu
+				className={styles.menu}
 				theme='dark'
 				mode='horizontal'
 				items={items}
-				style={{ flex: 1, minWidth: 0 }}
 			/>
 		</Header>
 	);

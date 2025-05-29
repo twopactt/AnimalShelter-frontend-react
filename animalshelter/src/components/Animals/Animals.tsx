@@ -1,3 +1,4 @@
+import styles from './Animals.module.css';
 import config from '../../api/config';
 import { Animal } from '../../models/Animal';
 import { TypeAnimal } from '../../models/TypeAnimal';
@@ -15,90 +16,61 @@ interface Props {
 	handleOpen: (animal: Animal) => void;
 }
 
-export const Animals = ({
+export const Animals: React.FC<Props> = ({
 	animals,
 	typeAnimals,
 	animalStatuses,
 	handleDelete,
 	handleOpen,
-}: Props) => {
-	const getTypeName = (id: string) => {
-		const type = typeAnimals.find(t => t.id === id);
-		return type ? type.name : id;
-	};
-
-	const getStatusName = (id: string) => {
-		const status = animalStatuses.find(s => s.id === id);
-		return status ? status.name : id;
-	};
+}) => {
+	const getTypeName = (id: string) =>
+		typeAnimals.find(t => t.id === id)?.name || id;
+	const getStatusName = (id: string) =>
+		animalStatuses.find(s => s.id === id)?.name || id;
 
 	return (
-		<div className='cards'>
-			{animals.map((animal: Animal) => (
+		<div className={styles.cards}>
+			{animals.map(animal => (
 				<Card
-					className='card'
 					key={animal.id}
+					className={styles.card}
 					cover={
 						<>
 							{animal.photo && (
-								<div style={{ position: 'relative', height: '200px' }}>
+								<div className={styles.card__img__container}>
 									<Image
-										className='card__img'
+										className={styles.card__img}
 										src={
 											animal.photo.startsWith('http')
 												? animal.photo
 												: `${config.api.baseUrl}${animal.photo}`
 										}
 										alt={animal.name}
-										style={{
-											width: '100%',
-											height: '200px',
-											objectFit: 'cover',
-											borderRadius: '6px',
-										}}
+										preview={false}
 									/>
 								</div>
 							)}
-							<div
-								style={{
-									display: 'flex',
-									justifyContent: 'space-between',
-									padding: '16px',
-									background: '#fafafa',
-									borderBottom: '1px solid #f0f0f0',
-								}}
-							>
-								<span style={{ fontWeight: 'bold' }}>{animal.name}</span>
-								<span>{getAgeString(animal.age)}</span>
+							<div className={styles.card__header}>
+								<span className={styles.card__name} title={animal.name}>
+									{animal.name}
+								</span>
+								<span className={styles.card__age}>
+									{getAgeString(animal.age)}
+								</span>
 							</div>
 						</>
 					}
 				>
-					<p>
-						<strong>Пол: </strong>
-						{animal.gender === 'Мальчик' ? 'Мальчик' : 'Девочка'}
-					</p>
-					<p>
-						<strong>Описание: </strong>
-						{animal.description}
-					</p>
-					<p>
-						<strong>Тип: </strong>
-						{getTypeName(animal.typeAnimalId)}
-					</p>
-					<p>
-						<strong>Статус: </strong>
-						{getStatusName(animal.animalStatusId)}
-					</p>
-					<div className='card__buttons'>
-						<Button onClick={() => handleOpen(animal)} style={{ flex: 1 }}>
+					<AnimalInfo
+						animal={animal}
+						typeName={getTypeName(animal.typeAnimalId)}
+						statusName={getStatusName(animal.animalStatusId)}
+					/>
+					<div className={styles.card__buttons}>
+						<Button block onClick={() => handleOpen(animal)}>
 							Редактировать
 						</Button>
-						<Button
-							onClick={() => handleDelete(animal.id)}
-							danger
-							style={{ flex: 1 }}
-						>
+						<Button block danger onClick={() => handleDelete(animal.id)}>
 							Удалить
 						</Button>
 					</div>
@@ -107,3 +79,28 @@ export const Animals = ({
 		</div>
 	);
 };
+
+const AnimalInfo: React.FC<{
+	animal: Animal;
+	typeName: string;
+	statusName: string;
+}> = ({ animal, typeName, statusName }) => (
+	<>
+		<p>
+			<strong>Пол: </strong>
+			{animal.gender === 'Мальчик' ? 'Мальчик' : 'Девочка'}
+		</p>
+		<p>
+			<strong>Описание: </strong>
+			{animal.description}
+		</p>
+		<p>
+			<strong>Тип: </strong>
+			{typeName}
+		</p>
+		<p>
+			<strong>Статус: </strong>
+			{statusName}
+		</p>
+	</>
+);
