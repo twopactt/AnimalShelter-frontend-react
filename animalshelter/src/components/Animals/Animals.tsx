@@ -6,7 +6,6 @@ import { AnimalStatus } from '../../models/AnimalStatus';
 import { getAgeString } from '../../utils/ageHelper';
 import Card from 'antd/es/card/Card';
 import Button from 'antd/es/button/button';
-import { Image } from 'antd';
 
 interface Props {
 	animals: Animal[];
@@ -38,7 +37,7 @@ export const Animals: React.FC<Props> = ({
 						<>
 							{animal.photo && (
 								<div className={styles.card__img__container}>
-									<Image
+									<img
 										className={styles.card__img}
 										src={
 											animal.photo.startsWith('http')
@@ -46,7 +45,6 @@ export const Animals: React.FC<Props> = ({
 												: `${config.api.baseUrl}${animal.photo}`
 										}
 										alt={animal.name}
-										preview={false}
 									/>
 								</div>
 							)}
