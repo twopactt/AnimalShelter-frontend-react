@@ -1,26 +1,31 @@
 import React from 'react';
-import logo from './logo.svg';
+import { Layout } from 'antd';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Header from './components/Layout/Header';
+import Footer from './components/Layout/Footer';
+import HomePage from './pages/HomePage';
+import AnimalsPage from './pages/AnimalsPage';
 import './App.css';
+
+const { Content } = Layout;
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+		<Router>
+			<Layout className='layout'>
+				<Header />
+				<Content style={{ padding: '0 50px', marginTop: 64 }}>
+					<div className='site-layout-content'>
+						<Routes>
+							<Route path='/' element={<HomePage />} />
+							<Route path='/animals' element={<AnimalsPage />} />
+						</Routes>
+					</div>
+				</Content>
+				<Footer />
+			</Layout>
+		</Router>
+	);
 }
 
 export default App;
