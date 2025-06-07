@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Skeleton } from 'antd';
 import { Animals } from '../components/Animals/Animals';
-import { CreateUpdateAnimal, Mode } from '../components/Animals/CreateUpdateAnimal';
+import { CreateUpdateAnimal } from '../components/Animals/CreateUpdateAnimal';
+import { Mode } from '../components/Animals/types';
 import {
 	AnimalRequest,
 	createAnimal,
@@ -85,7 +86,16 @@ export const AnimalsPage: React.FC = () => {
 
 	const openEditModal = (animal: Animal) => {
 		setMode(Mode.Edit);
-		setValues(animal);
+		setValues({
+			...animal,
+			name: animal.name || '',
+			description: animal.description || '',
+			gender: animal.gender || null,
+			age: animal.age || 0,
+			photo: animal.photo || '',
+			typeAnimalId: animal.typeAnimalId || '',
+			animalStatusId: animal.animalStatusId || '',
+		});
 		setIsModalOpen(true);
 	};
 
