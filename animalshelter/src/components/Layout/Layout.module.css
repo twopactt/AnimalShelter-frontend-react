@@ -19,17 +19,5 @@
   text-align: center;
   background: #fff;
   padding: 16px 0;
-}
-
-.content {
-  flex: 1;
-  padding: 0 50px;
-  margin-top: 64px;
-  margin-bottom: 64px;
-}
-
-.site-layout-content {
-  min-height: calc(100vh - 128px);
-  padding: 24px;
-  background: #fff;
+  margin-top: auto;
 }

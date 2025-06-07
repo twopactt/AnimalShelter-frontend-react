@@ -4,6 +4,7 @@ import { Animal } from '../../models/Animal';
 import config from '../../api/config';
 import { AnimalInfo } from './AnimalInfo';
 import { getAgeString } from '../../utils/ageHelper';
+import { useNavigate } from 'react-router-dom';
 
 interface AnimalCardProps {
 	animal: Animal;
@@ -20,9 +21,18 @@ export const AnimalCard = ({
 	onEdit,
 	onDelete,
 }: AnimalCardProps) => {
+	const navigate = useNavigate();
+
+	const handleCardClick = (e: React.MouseEvent) => {
+		if (!(e.target as HTMLElement).closest('button')) {
+			navigate(`/animals/${animal.id}`);
+		}
+	};
+
 	return (
 		<Card
 			className={styles.card}
+			onClick={handleCardClick}
 			cover={
 				<>
 					{animal.photo && (
