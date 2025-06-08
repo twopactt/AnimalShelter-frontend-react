@@ -78,6 +78,10 @@
   color: #495057;
 }
 
+.card__text {
+  text-align: left;
+}
+
 .card__buttons {
   display: flex;
   gap: 8px;

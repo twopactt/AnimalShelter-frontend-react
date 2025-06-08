@@ -145,7 +145,7 @@ const AnimalPage: React.FC = () => {
                     {animal.description && (
                         <div className={styles.description}>
                             <h2>Описание:</h2>
-                            <p>{animal.description}</p>
+                            <p style={{ textAlign: 'left' }}>{animal.description}</p>
                         </div>
                     )}
                 </div>

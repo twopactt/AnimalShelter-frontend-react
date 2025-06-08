@@ -103,7 +103,7 @@ export const AnimalsPage: React.FC = () => {
 		<div>
 			<Button
 				type='primary'
-				style={{ marginTop: '30px' }}
+				style={{ width: '200px' }}
 				size='large'
 				onClick={openModal}
 			>

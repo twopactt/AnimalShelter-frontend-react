@@ -2,6 +2,7 @@ declare const process: {
 	env: {
 		REACT_APP_API_BASE_URL: string;
 		REACT_APP_API_UPLOAD_URL: string;
+		REACT_APP_DEFAULT_USER_ROLE_ID: string;
 		[key: string]: string;
 	};
 };
@@ -21,6 +22,7 @@ const config = {
 			animalStatuses: '/AnimalStatuses',
 			typeAnimals: '/TypeAnimals',
 		},
+		defaultRoleId: process.env.REACT_APP_DEFAULT_USER_ROLE_ID,
 	},
 };
 

@@ -14,7 +14,7 @@ export const AnimalInfo: React.FC<AnimalInfoProps> = ({
 	statusName,
 }) => (
 	<>
-		<p>
+		<p className={styles.card__text}>
 			<strong>Пол: </strong>
 			{animal.gender === 'Мальчик' ? 'Мальчик' : 'Девочка'}
 		</p>
@@ -24,11 +24,11 @@ export const AnimalInfo: React.FC<AnimalInfoProps> = ({
 				<div className={styles.descriptionContent}>{animal.description}</div>
 			</div>
 		)}
-		<p>
+		<p className={styles.card__text}>
 			<strong>Тип: </strong>
 			{typeName}
 		</p>
-		<p>
+		<p className={styles.card__text}>
 			<strong>Статус: </strong>
 			{statusName}
 		</p>
