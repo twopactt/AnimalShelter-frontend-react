@@ -1,5 +1,6 @@
 import axios from 'axios';
 import config from '../api/config';
+import { User } from '../models/User';
 
 export interface LoginRequest {
     login: string;
@@ -16,18 +17,6 @@ export interface RegisterRequest {
     login: string;
     password: string;
     confirmPassword: string;
-    roleId: string;
-}
-
-export interface User {
-    id: string;
-    surname: string;
-    name: string;
-    patronymic?: string;
-    dateOfBirth: string;
-    phone: string;
-    email: string;
-    login: string;
     roleId: string;
 }
 

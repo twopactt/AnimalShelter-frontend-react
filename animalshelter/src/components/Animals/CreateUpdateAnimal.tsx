@@ -89,6 +89,7 @@ export const CreateUpdateAnimal = ({
 			onOk={handleOnOk}
 			onCancel={handleCancel}
 			cancelText={'Отмена'}
+			okText={'Сохранить'}
 		>
 			<div className={styles.animal__modal}>
 				<AnimalFormFields

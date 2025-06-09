@@ -100,3 +100,8 @@ p {
     margin-top: 1rem;
     color: #666;
 } 
+
+.ant-modal-footer .ant-btn {
+    margin-inline-start: 0px !important;
+    margin-top: 20px;
+}

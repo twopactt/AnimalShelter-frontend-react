@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Card, Button, Spin, message } from 'antd';
 import { ArrowLeftOutlined } from '@ant-design/icons';
-import { Animal } from '../models/Animal';
-import { TypeAnimal } from '../models/TypeAnimal';
-import { AnimalStatus } from '../models/AnimalStatus';
-import { getAgeString } from '../utils/ageHelper';
-import config from '../api/config';
+import { Animal } from '../../models/Animal';
+import { TypeAnimal } from '../../models/TypeAnimal';
+import { AnimalStatus } from '../../models/AnimalStatus';
+import { getAgeString } from '../../utils/ageHelper';
+import config from '../../api/config';
 import styles from './AnimalPage.module.css';
 
 const AnimalPage: React.FC = () => {

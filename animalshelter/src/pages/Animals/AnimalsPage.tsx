@@ -1,20 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Skeleton } from 'antd';
-import { Animals } from '../components/Animals/Animals';
-import { CreateUpdateAnimal } from '../components/Animals/CreateUpdateAnimal';
-import { Mode } from '../components/Animals/types';
+import { Animals } from '../../components/Animals/Animals';
+import { CreateUpdateAnimal } from '../../components/Animals/CreateUpdateAnimal';
+import { Mode } from '../../components/Animals/types';
 import {
 	AnimalRequest,
 	createAnimal,
 	deleteAnimal,
 	getAllAnimals,
 	updateAnimal,
-} from '../api/animals';
-import { getAllAnimalStatuses } from '../api/animalStatuses';
-import { getAllTypeAnimals } from '../api/typeAnimals';
-import { Animal } from '../models/Animal';
-import { AnimalStatus } from '../models/AnimalStatus';
-import { TypeAnimal } from '../models/TypeAnimal';
+} from '../../api/animals';
+import { getAllAnimalStatuses } from '../../api/animalStatuses';
+import { getAllTypeAnimals } from '../../api/typeAnimals';
+import { Animal } from '../../models/Animal';
+import { AnimalStatus } from '../../models/AnimalStatus';
+import { TypeAnimal } from '../../models/TypeAnimal';
 
 export const AnimalsPage: React.FC = () => {
 	const defaultValues = {
