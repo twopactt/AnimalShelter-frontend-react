@@ -14,6 +14,11 @@ interface AnimalCardProps {
 	onDelete: () => void;
 }
 
+const employeeId = `${config.api.rolesId.employeeId}`;
+const adminId = `${config.api.rolesId.adminId}`;
+const userStr = localStorage.getItem('user');
+const currentUser = userStr ? JSON.parse(userStr) : null;
+
 export const AnimalCard = ({
 	animal,
 	typeName,
@@ -58,14 +63,16 @@ export const AnimalCard = ({
 			}
 		>
 			<AnimalInfo animal={animal} typeName={typeName} statusName={statusName} />
-			<div className={styles.card__buttons}>
-				<Button block onClick={onEdit}>
-					Редактировать
-				</Button>
-				<Button block danger onClick={onDelete}>
-					Удалить
-				</Button>
-			</div>
+			{(currentUser && (currentUser.roleId === employeeId || currentUser.roleId === adminId)) && (
+				<div className={styles.card__buttons}>
+					<Button block onClick={onEdit}>
+						Редактировать
+					</Button>
+					<Button block danger onClick={onDelete}>
+						Удалить
+					</Button>
+				</div>
+			)}
 		</Card>
 	);
 };

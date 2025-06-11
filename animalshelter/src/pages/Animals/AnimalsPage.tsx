@@ -15,6 +15,7 @@ import { getAllTypeAnimals } from '../../api/typeAnimals';
 import { Animal } from '../../models/Animal';
 import { AnimalStatus } from '../../models/AnimalStatus';
 import { TypeAnimal } from '../../models/TypeAnimal';
+import config from '../../api/config';
 
 export const AnimalsPage: React.FC = () => {
 	const defaultValues = {
@@ -29,6 +30,11 @@ export const AnimalsPage: React.FC = () => {
 	const [mode, setMode] = useState(Mode.Create);
 	const [typeAnimals, setTypeAnimals] = useState<TypeAnimal[]>([]);
 	const [animalStatuses, setAnimalStatuses] = useState<AnimalStatus[]>([]);
+
+	const employeeId = `${config.api.rolesId.employeeId}`;
+	const adminId = `${config.api.rolesId.adminId}`;
+	const userStr = localStorage.getItem('user');
+	const currentUser = userStr ? JSON.parse(userStr) : null;
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -101,14 +107,18 @@ export const AnimalsPage: React.FC = () => {
 
 	return (
 		<div>
-			<Button
-				type='primary'
-				style={{ width: '200px' }}
-				size='large'
-				onClick={openModal}
-			>
-				Добавить животного
-			</Button>
+			{currentUser &&
+				(currentUser.roleId === employeeId ||
+					currentUser.roleId === adminId) && (
+					<Button
+						type='primary'
+						style={{ width: '200px' }}
+						size='large'
+						onClick={openModal}
+					>
+						Добавить животного
+					</Button>
+				)}
 
 			<CreateUpdateAnimal
 				mode={mode}

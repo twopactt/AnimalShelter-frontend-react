@@ -4,6 +4,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { UserOutlined, LogoutOutlined } from '@ant-design/icons';
 import { logout, getCurrentUser, isAuthenticated } from '../../api/authService';
 import styles from './Layout.module.css';
+import config from '../../api/config';
 
 const { Header: AntHeader } = Layout;
 
@@ -58,7 +59,7 @@ const Header: React.FC = () => {
 		}
 	};
 
-	const menuItems = [
+	let menuItems = [
 		{
 			key: 'home',
 			label: <Link to="/">Главная</Link>
@@ -68,6 +69,40 @@ const Header: React.FC = () => {
 			label: <Link to="/animals">Животные</Link>
 		}
 	];
+
+	const volunteerId = `${config.api.rolesId.volunteerId}`;
+	const employeeId = `${config.api.rolesId.employeeId}`;
+	const adminId = `${config.api.rolesId.adminId}`;
+
+	if (!employeeId || !adminId) {
+		console.warn('employeeId или adminId не определены в config.api.rolesId!');
+	}
+
+	console.log('currentUser:', currentUser);
+	console.log('employeeId:', employeeId, 'adminId:', adminId);
+
+	if (currentUser) {
+		menuItems.push({
+			key: 'my-adoption-applications',
+			label: <Link to="/my-adoption-applications">Мои заявки на усыновление</Link>
+		});
+		if ([volunteerId, employeeId, adminId].includes(currentUser.roleId)) {
+			menuItems.push({
+				key: 'my-temporary-accommodations',
+				label: <Link to="/my-temporary-accommodations">Мои заявки на передержку</Link>
+			});
+		}
+		if (currentUser.roleId === employeeId || currentUser.roleId === adminId) {
+			menuItems.push({
+				key: 'adoption-applications',
+				label: <Link to="/adoption-applications">Все заявки на усыновление</Link>
+			});
+			menuItems.push({
+				key: 'all-temporary-accommodations',
+				label: <Link to="/all-temporary-accommodations">Все заявки на передержку</Link>
+			});
+		}
+	}
 
 	return (
 		<AntHeader className={styles.header}>

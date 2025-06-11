@@ -17,13 +17,20 @@ export const getAllAdoptionApplications = async () => {
 };
 
 export const createAdoptionApplication = async (adoptionApplicationRequest: AdoptionApplicationRequest) => {
-	await fetch(`${config.api.baseUrl}${config.api.endpoints.adoptionApplications}`, {
+	const response = await fetch(`${config.api.baseUrl}${config.api.endpoints.adoptionApplications}`, {
 		method: 'POST',
 		headers: {
 			'content-type': 'application/json',
 		},
 		body: JSON.stringify(adoptionApplicationRequest),
 	});
+
+	if (!response.ok) {
+		const errorText = await response.text();
+		throw new Error(errorText || 'Ошибка при создании заявки на усыновление');
+	}
+
+	return response.json();
 };
 
 export const updateAdoptionApplication = async (

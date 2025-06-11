@@ -7,6 +7,7 @@ import './Auth.css';
 
 const Login: React.FC = () => {
     const [loading, setLoading] = useState(false);
+    const [form] = Form.useForm();
     const navigate = useNavigate();
 
     const handleSubmit = async (values: { login: string; password: string }) => {
@@ -15,8 +16,15 @@ const Login: React.FC = () => {
             await login(values);
             message.success('Вход выполнен успешно');
             window.location.href = '/';
-        } catch (error) {
-            message.error('Ошибка при входе');
+        } catch (error: any) {
+            console.error('Login error in component:', error);
+            message.error(error.message || 'Ошибка при входе');
+            form.setFields([
+                {
+                    name: 'password',
+                    errors: [error.message || 'Ошибка при входе']
+                }
+            ]);
         } finally {
             setLoading(false);
         }
@@ -25,6 +33,7 @@ const Login: React.FC = () => {
     return (
         <div className="auth-container">
             <Form
+                form={form}
                 name="login"
                 onFinish={handleSubmit}
                 className="auth-form"

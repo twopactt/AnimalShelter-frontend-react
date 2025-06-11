@@ -8,7 +8,11 @@ import AnimalsPage from './pages/Animals/AnimalsPage';
 import AnimalPage from './pages/Animals/AnimalPage';
 import Login from './components/Auth/Login';
 import Register from './components/Auth/Register';
+import MyAdoptionApplicationsPage from './pages/MyAdoptionApplications/MyAdoptionApplicationsPage';
+import AdoptionApplicationsPage from './pages/AdoptionApplications/AdoptionApplicationsPage';
 import './App.css';
+import AllTemporaryAccommodationsPage from './pages/TemporaryAccommodations/AllTemporaryAccommodationsPage';
+import MyTemporaryAccommodationsPage from './pages/TemporaryAccommodations/MyTemporaryAccommodationsPage';
 
 const { Content } = Layout;
 
@@ -24,6 +28,10 @@ const App: React.FC = () => {
 						<Route path="/register" element={<Register />} />
 						<Route path="/animals" element={<AnimalsPage />} />
 						<Route path="/animals/:id" element={<AnimalPage />} />
+						<Route path="/my-adoption-applications" element={<MyAdoptionApplicationsPage />} />
+						<Route path="/adoption-applications" element={<AdoptionApplicationsPage />} />
+						<Route path="/my-temporary-accommodations" element={<MyTemporaryAccommodationsPage />} />
+						<Route path="/all-temporary-accommodations" element={<AllTemporaryAccommodationsPage />} />
 					</Routes>
 				</Content>
 				<Footer />

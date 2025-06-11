@@ -75,9 +75,12 @@ export const login = async (data: LoginRequest): Promise<AuthResponse> => {
         localStorage.setItem('token', token);
         localStorage.setItem('user', JSON.stringify(user));
         return response.data;
-    } catch (error) {
+    } catch (error: any) {
         console.error('Login error:', error);
-        throw error;
+        if (error.response?.data?.message) {
+            throw new Error(error.response.data.message);
+        }
+        throw new Error('Произошла ошибка при входе в систему');
     }
 };
 
@@ -94,7 +97,7 @@ export const register = async (data: RegisterRequest): Promise<AuthResponse> => 
             login: data.login.trim(),
             password: data.password.trim(),
             confirmPassword: data.confirmPassword.trim(),
-            roleId: `${config.api.defaultRoleId}`
+            roleId: `${config.api.rolesId.defaultUserId}`
         };
         
         console.log('Register data:', formattedData);
@@ -108,15 +111,12 @@ export const register = async (data: RegisterRequest): Promise<AuthResponse> => 
         } else {
             throw new Error('Invalid response from server');
         }
-    } catch (error) {
+    } catch (error: any) {
         console.error('Register error:', error);
-        if (error && typeof error === 'object' && 'response' in error) {
-            const axiosError = error as { response: { data: any; status: number } };
-            console.error('Register error data:', axiosError.response.data);
-            console.error('Register error status:', axiosError.response.status);
-            console.error('Register error details:', JSON.stringify(axiosError.response.data, null, 2));
+        if (error.response?.data?.message) {
+            throw new Error(error.response.data.message);
         }
-        throw error;
+        throw new Error('Произошла ошибка при регистрации');
     }
 };
 

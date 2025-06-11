@@ -48,3 +48,15 @@
   padding: 0 50px;
   margin-top: 15px;
 }
+
+.popconfirm-center .ant-popconfirm-inner-content {
+  text-align: center;
+}
+.popconfirm-center .ant-popconfirm-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+.popconfirm-center .ant-btn {
+  min-width: 70px;
+}
