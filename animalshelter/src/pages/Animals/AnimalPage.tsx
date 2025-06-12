@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Card, Button, Spin, message, Modal, Input } from 'antd';
+import { Card, Button, Spin, message, Modal, Input, DatePicker } from 'antd';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { Animal } from '../../models/Animal';
 import { TypeAnimal } from '../../models/TypeAnimal';
@@ -16,6 +16,7 @@ import { getAllAdoptions } from '../../api/adoptions';
 import { getAllStatusAdoptions } from '../../api/statusAdoptions';
 import { updateAnimal } from '../../api/animals';
 import { createTemporaryAccommodation } from '../../api/temporaryAccommodations';
+import dayjs, { Dayjs } from 'dayjs';
 
 const AnimalPage: React.FC = () => {
 	const { id } = useParams<{ id: string }>();
@@ -32,7 +33,7 @@ const AnimalPage: React.FC = () => {
 	const [isModalVisible, setIsModalVisible] = useState(false);
 	const [comment, setComment] = useState('');
 	const [isFosterModalVisible, setIsFosterModalVisible] = useState(false);
-	const [fosterDate, setFosterDate] = useState('');
+	const [fosterDateRange, setFosterDateRange] = useState<[Dayjs, Dayjs] | null>(null);
 
 	const volunteerId = `${config.api.rolesId.volunteerId}`;
 	const employeeId = `${config.api.rolesId.employeeId}`;
@@ -207,13 +208,19 @@ const AnimalPage: React.FC = () => {
 
 	const handleFosterSubmit = async () => {
 		if (!animal || !currentUser) return;
+
+		if (!fosterDateRange || fosterDateRange.length !== 2) {
+			message.error('Пожалуйста, выберите даты начала и окончания передержки');
+			return;
+		}
+
+		const [startDate, endDate] = fosterDateRange;
+
 		setIsSubmitting(true);
 		try {
-			const today = new Date();
-			const formattedDate = today.toISOString().split('T')[0];
 			await createTemporaryAccommodation({
-				dateAnimalCapture: formattedDate,
-				dateAnimalReturn: '',
+				dateAnimalCapture: startDate.format('YYYY-MM-DD'),
+				dateAnimalReturn: endDate.format('YYYY-MM-DD'),
 				userId: currentUser.id,
 				animalId: animal.id,
 			});
@@ -223,7 +230,7 @@ const AnimalPage: React.FC = () => {
 			});
 			message.success('Заявка на передержку отправлена!');
 			setIsFosterModalVisible(false);
-			setFosterDate('');
+			setFosterDateRange(null);
 		} catch (e: any) {
 			message.error(e.message || 'Ошибка при отправке заявки на передержку');
 		} finally {
@@ -391,7 +398,12 @@ const AnimalPage: React.FC = () => {
 				okText='Отправить'
 				cancelText='Отмена'
 			>
-				<p>Вы уверены, что хотите взять {animal?.name} на передержку?</p>
+				<p>Выберите даты начала и окончания передержки для {animal?.name}:</p>
+				<DatePicker.RangePicker
+					value={fosterDateRange}
+					onChange={dates => setFosterDateRange(dates as [Dayjs, Dayjs] | null)}
+					format='YYYY-MM-DD'
+				/>
 			</Modal>
 		</div>
 	);

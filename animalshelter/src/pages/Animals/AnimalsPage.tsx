@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Skeleton } from 'antd';
+import { Button, Skeleton, Row, Col } from 'antd';
 import { Animals } from '../../components/Animals/Animals';
 import { CreateUpdateAnimal } from '../../components/Animals/CreateUpdateAnimal';
 import { Mode } from '../../components/Animals/types';
+import {
+	AnimalFilters,
+	AnimalFilters as AnimalFiltersType,
+} from '../../components/Animals/AnimalFilters';
 import {
 	AnimalRequest,
 	createAnimal,
@@ -25,6 +29,7 @@ export const AnimalsPage: React.FC = () => {
 
 	const [values, setValues] = useState<Animal>(defaultValues);
 	const [animals, setAnimals] = useState<Animal[]>([]);
+	const [filteredAnimals, setFilteredAnimals] = useState<Animal[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [mode, setMode] = useState(Mode.Create);
@@ -46,6 +51,7 @@ export const AnimalsPage: React.FC = () => {
 				]);
 
 				setAnimals(animalsData);
+				setFilteredAnimals(animalsData);
 				setTypeAnimals(typesData);
 				setAnimalStatuses(statusesData);
 			} catch (error) {
@@ -78,6 +84,7 @@ export const AnimalsPage: React.FC = () => {
 	const refreshAnimals = async () => {
 		const updatedAnimals = await getAllAnimals();
 		setAnimals(updatedAnimals);
+		setFilteredAnimals(updatedAnimals);
 	};
 
 	const openModal = () => {
@@ -105,20 +112,63 @@ export const AnimalsPage: React.FC = () => {
 		setIsModalOpen(true);
 	};
 
+	const handleFilterChange = (filters: AnimalFiltersType) => {
+		let filtered = [...animals];
+
+		if (filters.typeAnimalId) {
+			filtered = filtered.filter(
+				animal => animal.typeAnimalId === filters.typeAnimalId
+			);
+		}
+
+		if (filters.gender) {
+			filtered = filtered.filter(animal => animal.gender === filters.gender);
+		}
+
+		if (filters.minAge !== undefined) {
+			filtered = filtered.filter(animal => animal.age >= filters.minAge!);
+		}
+
+		if (filters.maxAge !== undefined) {
+			filtered = filtered.filter(animal => animal.age <= filters.maxAge!);
+		}
+
+		if (filters.animalStatusId) {
+			filtered = filtered.filter(
+				animal => animal.animalStatusId === filters.animalStatusId
+			);
+		}
+
+		setFilteredAnimals(filtered);
+	};
+
 	return (
 		<div>
-			{currentUser &&
-				(currentUser.roleId === employeeId ||
-					currentUser.roleId === adminId) && (
-					<Button
-						type='primary'
-						style={{ width: '200px' }}
-						size='large'
-						onClick={openModal}
-					>
-						Добавить животного
-					</Button>
-				)}
+			<Row justify='space-between' align='middle' style={{ marginBottom: 16 }}>
+				<Col
+					flex='auto'
+				>
+					<AnimalFilters
+						typeAnimals={typeAnimals}
+						animalStatuses={animalStatuses}
+						onFilterChange={handleFilterChange}
+					/>
+				</Col>
+				{currentUser &&
+					(currentUser.roleId === employeeId ||
+						currentUser.roleId === adminId) && (
+						<Col>
+							<Button
+								type='primary'
+								style={{ width: '200px' }}
+								size='large'
+								onClick={openModal}
+							>
+								Добавить животного
+							</Button>
+						</Col>
+					)}
+			</Row>
 
 			<CreateUpdateAnimal
 				mode={mode}
@@ -135,7 +185,7 @@ export const AnimalsPage: React.FC = () => {
 				<Skeleton active paragraph={{ rows: 6 }} />
 			) : (
 				<Animals
-					animals={animals}
+					animals={filteredAnimals}
 					typeAnimals={typeAnimals}
 					animalStatuses={animalStatuses}
 					handleOpen={openEditModal}
