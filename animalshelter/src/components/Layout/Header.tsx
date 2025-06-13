@@ -102,6 +102,12 @@ const Header: React.FC = () => {
 				label: <Link to="/all-temporary-accommodations">Все заявки на передержку</Link>
 			});
 		}
+		if (currentUser.roleId === adminId) {
+			menuItems.push({
+				key: 'user-roles',
+				label: <Link to="/user-roles">Управление ролями</Link>
+			});
+		}
 	}
 
 	return (

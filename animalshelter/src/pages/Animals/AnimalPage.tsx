@@ -14,6 +14,7 @@ import {
 } from '../../api/adoptionApplications';
 import { getAllAdoptions } from '../../api/adoptions';
 import { getAllStatusAdoptions } from '../../api/statusAdoptions';
+import { getAllStatusTemporaryAccommodations } from '../../api/statusTemporaryAccommodations';
 import { updateAnimal } from '../../api/animals';
 import { createTemporaryAccommodation } from '../../api/temporaryAccommodations';
 import dayjs, { Dayjs } from 'dayjs';
@@ -30,6 +31,7 @@ const AnimalPage: React.FC = () => {
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [currentUser, setCurrentUser] = useState<any>(null);
 	const [statusAdoptions, setStatusAdoptions] = useState<any[]>([]);
+	const [statusTemporaryAccommodations, setStatusTemporaryAccommodations] = useState<any[]>([]);
 	const [isModalVisible, setIsModalVisible] = useState(false);
 	const [comment, setComment] = useState('');
 	const [isFosterModalVisible, setIsFosterModalVisible] = useState(false);
@@ -223,6 +225,7 @@ const AnimalPage: React.FC = () => {
 				dateAnimalReturn: endDate.format('YYYY-MM-DD'),
 				userId: currentUser.id,
 				animalId: animal.id,
+				statusTemporaryAccommodationId: config.api.statusTemporaryAccommodationsId.defaultStatusTemporaryAccommodationId,
 			});
 			await updateAnimal(animal.id, {
 				...animal,

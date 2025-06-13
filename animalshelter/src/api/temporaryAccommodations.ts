@@ -5,6 +5,7 @@ export interface TemporaryAccommodationRequest {
 	dateAnimalReturn: string;
 	userId: string;
 	animalId: string;
+	statusTemporaryAccommodationId: string;
 }
 
 export const getAllTemporaryAccommodations = async () => {
@@ -32,18 +33,22 @@ export const createTemporaryAccommodation = async (
 
 export const updateTemporaryAccommodation = async (
 	id: string,
-	temporaryAccommodationRequest: TemporaryAccommodationRequest
+	data: Partial<TemporaryAccommodationRequest>
 ) => {
-	await fetch(
+	const response = await fetch(
 		`${config.api.baseUrl}${config.api.endpoints.temporaryAccommodations}/${id}`,
 		{
 			method: 'PUT',
 			headers: {
-				'content-type': 'application/json',
+				'Content-Type': 'application/json',
 			},
-			body: JSON.stringify(temporaryAccommodationRequest),
+			body: JSON.stringify(data),
 		}
 	);
+	if (!response.ok) {
+		const errorText = await response.text();
+		throw new Error(errorText || 'Ошибка при обновлении передержки');
+	}
 };
 
 export const deleteTemporaryAccommodation = async (id: string) => {

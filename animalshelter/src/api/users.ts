@@ -48,3 +48,32 @@ export const deleteUser = async (id: string) => {
 		method: 'DELETE',
 	});
 };
+
+export const updateUserRole = async (userId: string, newRoleId: string) => {
+	const userResponse = await fetch(
+		`${config.api.baseUrl}${config.api.endpoints.users}/${userId}`
+	);
+	const userData = await userResponse.json();
+
+	const updatedUser = {
+		...userData,
+		roleId: newRoleId,
+	};
+
+	const response = await fetch(
+		`${config.api.baseUrl}${config.api.endpoints.users}/${userId}`,
+		{
+			method: 'PUT',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(updatedUser),
+		}
+	);
+
+	if (!response.ok) {
+		throw new Error('Ошибка при обновлении роли пользователя');
+	}
+
+	return response.json();
+};

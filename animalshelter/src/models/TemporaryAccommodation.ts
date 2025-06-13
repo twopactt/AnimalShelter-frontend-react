@@ -4,4 +4,5 @@ export interface TemporaryAccommodation {
 	dateAnimalReturn: string;
 	userId: string;
 	animalId: string;
+	statusTemporaryAccommodationId: string;
 }

@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Card } from 'antd';
-import { getAllTemporaryAccommodations } from '../../api/temporaryAccommodations';
-import { getAllAnimals } from '../../api/animals';
+import { Card, message, Select } from 'antd';
+import {
+	getAllTemporaryAccommodations,
+	updateTemporaryAccommodation,
+} from '../../api/temporaryAccommodations';
+import { getAllAnimals, updateAnimal } from '../../api/animals';
 import { useNavigate } from 'react-router-dom';
 import config from '../../api/config';
 
@@ -30,13 +33,19 @@ const MyTemporaryAccommodationsPage: React.FC = () => {
 		}
 		const fetchData = async () => {
 			setLoading(true);
-			const [accs, animalsData] = await Promise.all([
-				getAllTemporaryAccommodations(),
-				getAllAnimals(),
-			]);
-			setAccommodations(accs);
-			setAnimals(animalsData);
-			setLoading(false);
+			try {
+				const [accs, animalsData] = await Promise.all([
+					getAllTemporaryAccommodations(),
+					getAllAnimals(),
+				]);
+				setAccommodations(accs);
+				setAnimals(animalsData);
+			} catch (error) {
+				console.error('Error fetching data:', error);
+				message.error('Ошибка при загрузке данных');
+			} finally {
+				setLoading(false);
+			}
 		};
 		fetchData();
 	}, [navigate]);
@@ -47,6 +56,42 @@ const MyTemporaryAccommodationsPage: React.FC = () => {
 
 	const getAnimalName = (animalId: string) =>
 		animals.find(a => a.id === animalId)?.name || 'Неизвестно';
+
+	const updateTemporaryAccommodationStatus = async (
+		id: string,
+		newStatus: string,
+		animalId: string,
+		currentAccommodation: any
+	) => {
+		try {
+			await updateTemporaryAccommodation(id, {
+				...currentAccommodation,
+				statusTemporaryAccommodationId: newStatus,
+			});
+
+			let newAnimalStatusId = '';
+			if (newStatus === config.api.statusTemporaryAccommodationsId.approvedId) {
+				newAnimalStatusId = config.api.animalStatusesId.fosterCareId;
+			} else {
+				newAnimalStatusId = config.api.animalStatusesId.defaultAnimalStatusId;
+			}
+
+			const animal = animals.find(a => a.id === animalId);
+			if (animal) {
+				await updateAnimal(animal.id, {
+					...animal,
+					animalStatusId: newAnimalStatusId,
+				});
+				message.success('Статус передержки и животного обновлены');
+
+				const updatedAnimals = await getAllAnimals();
+				setAnimals(updatedAnimals);
+			}
+		} catch (error) {
+			console.error('Error updating status:', error);
+			message.error('Ошибка при обновлении статуса');
+		}
+	};
 
 	return (
 		<div style={{ maxWidth: 900, margin: '0 auto', padding: 24 }}>
@@ -61,7 +106,43 @@ const MyTemporaryAccommodationsPage: React.FC = () => {
 					<b>Дата окончания:</b>{' '}
 					{acc.dateAnimalReturn
 						? new Date(acc.dateAnimalReturn).toLocaleDateString()
-						: '—'}
+						: '---'}
+					<br />
+					<Select
+						defaultValue={
+							acc.statusTemporaryAccommodationId ||
+							config.api.statusTemporaryAccommodationsId
+								.defaultStatusTemporaryAccommodationId
+						}
+						style={{ width: 200, marginTop: 12 }}
+						onChange={newStatus =>
+							updateTemporaryAccommodationStatus(
+								acc.id,
+								newStatus,
+								acc.animalId,
+								acc
+							)
+						}
+					>
+						<Select.Option
+							value={
+								config.api.statusTemporaryAccommodationsId
+									.defaultStatusTemporaryAccommodationId
+							}
+						>
+							На рассмотрении
+						</Select.Option>
+						<Select.Option
+							value={config.api.statusTemporaryAccommodationsId.approvedId}
+						>
+							Одобрено
+						</Select.Option>
+						<Select.Option
+							value={config.api.statusTemporaryAccommodationsId.rejectedId}
+						>
+							Отклонено
+						</Select.Option>
+					</Select>
 				</Card>
 			))}
 			{!myAccs.length && !loading && <div>У вас нет активных передержек.</div>}

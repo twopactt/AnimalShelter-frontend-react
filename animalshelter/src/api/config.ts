@@ -2,7 +2,7 @@ declare const process: {
 	env: {
 		REACT_APP_API_BASE_URL: string;
 		REACT_APP_API_UPLOAD_URL: string;
-		
+
 		REACT_APP_DEFAULT_USER_ROLE_ID: string;
 		REACT_APP_VOLUNTEER_ROLE_ID: string;
 		REACT_APP_EMPLOYEE_ROLE_ID: string;
@@ -17,7 +17,11 @@ declare const process: {
 		REACT_APP_BOOKED_ANIMAL_STATUS_ID: string;
 		REACT_APP_FOSTER_CARE_ANIMAL_STATUS_ID: string;
 		REACT_APP_UNDER_TREATMENT_ANIMAL_STATUS_ID: string;
-		
+
+		REACT_APP_DEFAULT_STATUS_TEMPORARY_ID: string;
+		REACT_APP_APPROVED_STATUS_TEMPORARY_ID: string;
+		REACT_APP_REJECTED_STATUS_TEMPORARY_ID: string;
+
 		[key: string]: string;
 	};
 };
@@ -40,6 +44,7 @@ const config = {
 			adoptionApplications: '/AdoptionApplications',
 			statusAdoptions: '/StatusAdoptions',
 			temporaryAccommodations: '/TemporaryAccommodations',
+			statusTemporaryAccommodations: '/StatusTemporaryAccommodations',
 			roles: '/Roles',
 			users: '/Users',
 		},
@@ -60,6 +65,11 @@ const config = {
 			bookedId: process.env.REACT_APP_BOOKED_ANIMAL_STATUS_ID,
 			fosterCareId: process.env.REACT_APP_FOSTER_CARE_ANIMAL_STATUS_ID,
 			underTreatmentId: process.env.REACT_APP_UNDER_TREATMENT_ANIMAL_STATUS_ID,
+		},
+		statusTemporaryAccommodationsId: {
+			defaultStatusTemporaryAccommodationId: process.env.REACT_APP_DEFAULT_STATUS_TEMPORARY_ID,
+			approvedId: process.env.REACT_APP_APPROVED_STATUS_TEMPORARY_ID,
+			rejectedId: process.env.REACT_APP_REJECTED_STATUS_TEMPORARY_ID,
 		},
 	},
 };

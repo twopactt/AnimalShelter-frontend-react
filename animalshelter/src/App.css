@@ -60,3 +60,23 @@
 .popconfirm-center .ant-btn {
   min-width: 70px;
 }
+
+.ant-picker-header-super-prev-btn {
+  width: 20px;
+  min-width: 0;
+}
+
+.ant-picker-header-prev-btn {
+  width: 20px;
+  min-width: 0;
+}
+
+.ant-picker-header-next-btn {
+  width: 20px;
+  min-width: 0;
+}
+
+.ant-picker-header-super-next-btn {
+  width: 20px;
+  min-width: 0;
+}

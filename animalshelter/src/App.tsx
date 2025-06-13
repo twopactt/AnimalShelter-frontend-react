@@ -13,6 +13,7 @@ import AdoptionApplicationsPage from './pages/AdoptionApplications/AdoptionAppli
 import './App.css';
 import AllTemporaryAccommodationsPage from './pages/TemporaryAccommodations/AllTemporaryAccommodationsPage';
 import MyTemporaryAccommodationsPage from './pages/TemporaryAccommodations/MyTemporaryAccommodationsPage';
+import UserRolesPage from './pages/UserRolesPage/UserRolesPage';
 
 const { Content } = Layout;
 
@@ -32,6 +33,7 @@ const App: React.FC = () => {
 						<Route path="/adoption-applications" element={<AdoptionApplicationsPage />} />
 						<Route path="/my-temporary-accommodations" element={<MyTemporaryAccommodationsPage />} />
 						<Route path="/all-temporary-accommodations" element={<AllTemporaryAccommodationsPage />} />
+						<Route path="/user-roles" element={<UserRolesPage />} />
 					</Routes>
 				</Content>
 				<Footer />
