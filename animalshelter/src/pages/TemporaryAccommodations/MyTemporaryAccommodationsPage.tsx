@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Card, message, Select } from 'antd';
+import { Button, Card, message, Select, Popconfirm, Tag } from 'antd';
 import {
 	getAllTemporaryAccommodations,
 	updateTemporaryAccommodation,
+	deleteTemporaryAccommodation,
 } from '../../api/temporaryAccommodations';
 import { getAllAnimals, updateAnimal } from '../../api/animals';
 import { useNavigate } from 'react-router-dom';
@@ -13,6 +14,7 @@ const MyTemporaryAccommodationsPage: React.FC = () => {
 	const [animals, setAnimals] = useState<any[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [currentUser, setCurrentUser] = useState<any>(null);
+	const [statuses, setStatuses] = useState<any[]>([]);
 	const navigate = useNavigate();
 
 	const volunteerId = `${config.api.rolesId.volunteerId}`;
@@ -56,6 +58,19 @@ const MyTemporaryAccommodationsPage: React.FC = () => {
 
 	const getAnimalName = (animalId: string) =>
 		animals.find(a => a.id === animalId)?.name || 'Неизвестно';
+	const getStatus = (statusId: string) =>
+		statuses.find(s => s.id === statusId)?.name || 'Неизвестно';
+	const getStatusTag = (status: string) => {
+		if (status === 'Активна') return <Tag color='green'>Активна</Tag>;
+		if (status === 'Отклонена') return <Tag color='red'>Отклонена</Tag>;
+		return <Tag color='blue'>На рассмотрении</Tag>;
+	};
+
+	const handleDelete = async (id: string) => {
+		await deleteTemporaryAccommodation(id);
+		setAccommodations(accommodations.filter(acc => acc.id !== id));
+		message.success('Передержка удалена');
+	};
 
 	const updateTemporaryAccommodationStatus = async (
 		id: string,
@@ -108,41 +123,25 @@ const MyTemporaryAccommodationsPage: React.FC = () => {
 						? new Date(acc.dateAnimalReturn).toLocaleDateString()
 						: '---'}
 					<br />
-					<Select
-						defaultValue={
-							acc.statusTemporaryAccommodationId ||
-							config.api.statusTemporaryAccommodationsId
-								.defaultStatusTemporaryAccommodationId
-						}
-						style={{ width: 200, marginTop: 12 }}
-						onChange={newStatus =>
-							updateTemporaryAccommodationStatus(
-								acc.id,
-								newStatus,
-								acc.animalId,
-								acc
-							)
-						}
+					<div
+						style={{ marginTop: 12, display: 'flex', justifyContent: 'center' }}
 					>
-						<Select.Option
-							value={
-								config.api.statusTemporaryAccommodationsId
-									.defaultStatusTemporaryAccommodationId
-							}
+						<Popconfirm
+							title='Удалить заявку?'
+							onConfirm={() => handleDelete(acc.id)}
+							okText='Да'
+							cancelText='Нет'
+							placement='top'
+							overlayClassName='popconfirm-center'
 						>
-							На рассмотрении
-						</Select.Option>
-						<Select.Option
-							value={config.api.statusTemporaryAccommodationsId.approvedId}
-						>
-							Одобрено
-						</Select.Option>
-						<Select.Option
-							value={config.api.statusTemporaryAccommodationsId.rejectedId}
-						>
-							Отклонено
-						</Select.Option>
-					</Select>
+							<Button
+								danger
+								style={{ minWidth: 120, display: 'block', margin: '0 auto' }}
+							>
+								Удалить
+							</Button>
+						</Popconfirm>
+					</div>
 				</Card>
 			))}
 			{!myAccs.length && !loading && <div>У вас нет активных передержек.</div>}
