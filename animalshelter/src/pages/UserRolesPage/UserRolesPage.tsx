@@ -5,6 +5,7 @@ import { getAllUsers, updateUser } from '../../api/users';
 import { getAllRoles } from '../../api/roles';
 import { getCurrentUser } from '../../api/authService';
 import { useNavigate } from 'react-router-dom';
+import config from '../../api/config';
 
 const { Option } = Select;
 
@@ -13,23 +14,39 @@ const UserRolesPage: React.FC = () => {
 	const [roles, setRoles] = useState<any[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [currentUser, setCurrentUser] = useState<any>(null);
+	const [isAdmin, setIsAdmin] = useState(false);
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		const fetchCurrentUser = async () => {
-			const user = await getCurrentUser();
-			setCurrentUser(user);
+		const checkAuthAndRole = async () => {
+			try {
+				const user = await getCurrentUser();
+				setCurrentUser(user);
 
-			if (!user || user.roleId !== 'admin') {
-				message.error('Доступ запрещен');
-				navigate('/');
+				if (!user) {
+					message.error('Требуется авторизация');
+					navigate('/login');
+					return;
+				}
+
+				if (user.roleId !== config.api.rolesId.adminId) {
+					message.error('Доступ запрещен');
+					navigate('/');
+					return;
+				}
+
+				setIsAdmin(true);
+				await fetchData(user);
+			} catch (error) {
+				console.error('Error checking auth:', error);
+				navigate('/login');
 			}
 		};
 
-		fetchCurrentUser();
+		checkAuthAndRole();
 	}, [navigate]);
 
-	const fetchData = async () => {
+	const fetchData = async (user: any) => {
 		setLoading(true);
 		try {
 			const [usersData, rolesData] = await Promise.all([
@@ -37,8 +54,7 @@ const UserRolesPage: React.FC = () => {
 				getAllRoles(),
 			]);
 
-			const filteredUsers = usersData.filter((user: User) => user.id !== currentUser?.id);
-
+			const filteredUsers = usersData.filter((u: User) => u.id !== user.id);
 			setUsers(filteredUsers);
 			setRoles(rolesData);
 		} catch (error) {
@@ -49,10 +65,33 @@ const UserRolesPage: React.FC = () => {
 	};
 
 	useEffect(() => {
-		if (currentUser) {
-			fetchData();
-		}
-	}, [currentUser]);
+		const checkAuthAndRole = async () => {
+			try {
+				const user = await getCurrentUser();
+				setCurrentUser(user);
+
+				if (!user) {
+					message.error('Требуется авторизация');
+					navigate('/login');
+					return;
+				}
+
+				if (user.roleId !== config.api.rolesId.adminId) {
+					message.error('Доступ запрещен');
+					navigate('/');
+					return;
+				}
+
+				setIsAdmin(true);
+				await fetchData(user);
+			} catch (error) {
+				console.error('Error checking auth:', error);
+				navigate('/login');
+			}
+		};
+
+		checkAuthAndRole();
+	}, [navigate]);
 
 	const handleRoleChange = async (userId: string, newRole: string) => {
 		if (!newRole) {
@@ -112,20 +151,32 @@ const UserRolesPage: React.FC = () => {
 				<Select
 					style={{ width: 150 }}
 					defaultValue={roleId}
-					onChange={(value) => handleRoleChange(user.id, value)}
+					value={roleId}
+					onChange={value => handleRoleChange(user.id, value)}
 					disabled={loading}
 				>
-					{roles.map(role => (
-						<Select.Option key={role.id} value={role.id}>
-							{role.name}
-						</Select.Option>
-					))}
+					{roles
+						.filter(role => role.id !== config.api.rolesId.adminId)
+						.map(role => (
+							<Select.Option key={role.id} value={role.id}>
+								{role.name}
+							</Select.Option>
+						))}
 				</Select>
 			),
 		},
 	];
 
 	if (loading && !users.length) {
+		return (
+			<Spin
+				size='large'
+				style={{ display: 'flex', justifyContent: 'center', marginTop: '20%' }}
+			/>
+		);
+	}
+
+	if (!isAdmin) {
 		return (
 			<Spin
 				size='large'
