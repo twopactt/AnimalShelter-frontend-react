@@ -36,6 +36,7 @@ const AnimalPage: React.FC = () => {
 	const [comment, setComment] = useState('');
 	const [isFosterModalVisible, setIsFosterModalVisible] = useState(false);
 	const [fosterDateRange, setFosterDateRange] = useState<[Dayjs, Dayjs] | null>(null);
+	const [isApplicationSubmitted, setIsApplicationSubmitted] = useState(false);
 
 	const volunteerId = `${config.api.rolesId.volunteerId}`;
 	const employeeId = `${config.api.rolesId.employeeId}`;
@@ -59,6 +60,7 @@ const AnimalPage: React.FC = () => {
 				const data = await response.json();
 				console.log('Animal data:', data);
 				setAnimal(data);
+				setIsApplicationSubmitted(false);
 
 				const typesResponse = await fetch(
 					`${config.api.baseUrl}${config.api.endpoints.typeAnimals}`
@@ -188,6 +190,7 @@ const AnimalPage: React.FC = () => {
 				...animal,
 				animalStatusId: config.api.animalStatusesId.bookedId,
 			});
+			setIsApplicationSubmitted(true);
 			message.success('Заявка отправлена!');
 			setIsModalVisible(false);
 			setComment('');
@@ -231,6 +234,7 @@ const AnimalPage: React.FC = () => {
 				...animal,
 				animalStatusId: config.api.animalStatusesId.fosterCareId,
 			});
+			setIsApplicationSubmitted(true);
 			message.success('Заявка на передержку отправлена!');
 			setIsFosterModalVisible(false);
 			setFosterDateRange(null);
@@ -332,7 +336,7 @@ const AnimalPage: React.FC = () => {
 							<>
 								<Button
 									type='primary'
-									disabled={!canAdopt || isAlreadyApplied || isSubmitting}
+									disabled={!canAdopt || isAlreadyApplied || isSubmitting || isApplicationSubmitted}
 									onClick={handleAdopt}
 								>
 									{isAdopted
@@ -343,7 +347,7 @@ const AnimalPage: React.FC = () => {
 										? 'Животное на передержке'
 										: isUnderTreatment
 										? 'Животное на лечении'
-										: isAlreadyApplied
+										: isAlreadyApplied || isApplicationSubmitted
 										? 'Заявка уже отправлена'
 										: 'Усыновить'}
 								</Button>
@@ -352,10 +356,10 @@ const AnimalPage: React.FC = () => {
 								) && (
 									<Button
 										type='default'
-										disabled={!canFoster || isSubmitting}
+										disabled={!canFoster || isSubmitting || isApplicationSubmitted}
 										onClick={handleFoster}
 									>
-										{isFosterCare
+										{isFosterCare || isApplicationSubmitted
 											? 'Животное на передержке'
 											: isUnderTreatment
 											? 'Животное на лечении'
