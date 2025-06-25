@@ -16,7 +16,7 @@
 }
 
 .card:hover {
-  transform: translateY(-10px);
+  transform: translateY(-14px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
@@ -25,23 +25,17 @@
   width: 100%;
   position: relative;
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .card__img {
-  min-width: 100%;
-  min-height: 100%;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   object-position: center;
   transition: transform 0.3s ease;
-  display: block;
-  margin: 0;
-  padding: 0;
-  min-width: 100%;
-  min-height: 100%;
-}
-
-.card:hover .card__img {
-  transform: scale(1.05);
 }
 
 .card__header {
@@ -68,6 +62,7 @@
   font-size: 18px;
   line-height: 26px;
   font-weight: 600;
+  float: right;
 }
 
 .card__content {
@@ -83,11 +78,51 @@
   color: #495057;
 }
 
+.card__text {
+  text-align: left;
+}
+
 .card__buttons {
   display: flex;
   gap: 8px;
   margin-top: 16px;
 }
+
+.descriptionContainer {
+  margin-bottom: 8px;
+}
+
+.descriptionContent {
+  white-space: pre-line;
+  margin-top: 4px;
+  padding: 8px;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+  max-height: 4.5em;
+  overflow-y: auto; 
+  scrollbar-width: thin; 
+}
+
+/* Стилизация полосы прокрутки для WebKit браузеров */
+.descriptionContent::-webkit-scrollbar {
+  width: 6px;
+}
+
+.descriptionContent::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.descriptionContent::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 3px;
+}
+
+.descriptionContent::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+
 
 /* Модальное окно */
 .animal__modal {

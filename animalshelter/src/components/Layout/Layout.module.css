@@ -4,32 +4,141 @@
   flex-direction: column;
 }
 
-.header {
-  position: fixed;
-  z-index: 1;
-  width: 100%;
-}
-
-.menu {
-  flex: 1;
-  min-width: 0;
-}
-
 .footer {
   text-align: center;
   background: #fff;
   padding: 16px 0;
+  margin-top: auto;
 }
 
-.content {
-  flex: 1;
-  padding: 0 50px;
-  margin-top: 64px;
-  margin-bottom: 64px;
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  background: #061529;
 }
 
-.site-layout-content {
-  min-height: calc(100vh - 128px);
-  padding: 24px;
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+  color: #fff;
+  margin-right: 32px;
+  white-space: nowrap;
+}
+
+.logo a {
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.menu {
+  flex: 1 1 auto;
+  min-width: 200px;
+  background: transparent;
+}
+
+.auth-buttons {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  white-space: nowrap;
+  height: 64px;
+}
+
+.auth-button {
+  color: white !important;
+  font-size: 16px;
+}
+
+.auth-button:hover {
+  color: #1890ff !important;
+}
+
+.auth-button a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.user-button {
+  color: white !important;
+  font-size: 16px;
+}
+
+.logout-button {
+  color: white !important;
+  font-size: 16px;
+}
+
+.logout-button:hover {
+  color: #ff4d4f !important;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #fff;
+  font-weight: 500;
+  height: 100%;
+}
+
+.ant-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.ant-btn-primary {
+  background: #1890ff;
+}
+
+.ant-btn-primary:hover {
+  background: #40a9ff;
+}
+
+.ant-btn-danger {
+  background: #ff4d4f;
+}
+
+.ant-btn-danger:hover {
+  background: #ff7875;
+}
+
+.auth-buttons .ant-btn {
+  display: flex;
+  align-items: center;
+  height: 40px;
+  margin: 0;
+  padding: 0 20px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  box-shadow: 0 2px 8px rgba(24, 144, 255, 0.08);
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+}
+
+.auth-buttons .ant-btn-primary {
+  background: linear-gradient(90deg, #1677ff 0%, #69b1ff 100%);
+  border: none;
+  color: #fff;
+}
+
+.auth-buttons .ant-btn-primary:hover, .auth-buttons .ant-btn-primary:focus {
+  background: linear-gradient(90deg, #0958d9 0%, #1677ff 100%);
+  color: #fff;
+}
+
+.auth-buttons .ant-btn:not(.ant-btn-primary) {
   background: #fff;
+  color: #1677ff;
+  border: 1.5px solid #1677ff;
 }
+
+.auth-buttons .ant-btn:not(.ant-btn-primary):hover, .auth-buttons .ant-btn:not(.ant-btn-primary):focus {
+  background: #e6f4ff;
+  color: #0958d9;
+  border-color: #0958d9;
+} 

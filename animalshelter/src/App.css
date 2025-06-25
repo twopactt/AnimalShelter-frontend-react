@@ -36,3 +36,47 @@
     transform: rotate(360deg);
   }
 }
+
+.layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  flex: 1;
+  padding: 0 50px;
+  margin-top: 15px;
+}
+
+.popconfirm-center .ant-popconfirm-inner-content {
+  text-align: center;
+}
+.popconfirm-center .ant-popconfirm-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+.popconfirm-center .ant-btn {
+  min-width: 70px;
+}
+
+.ant-picker-header-super-prev-btn {
+  width: 20px;
+  min-width: 0;
+}
+
+.ant-picker-header-prev-btn {
+  width: 20px;
+  min-width: 0;
+}
+
+.ant-picker-header-next-btn {
+  width: 20px;
+  min-width: 0;
+}
+
+.ant-picker-header-super-next-btn {
+  width: 20px;
+  min-width: 0;
+}
